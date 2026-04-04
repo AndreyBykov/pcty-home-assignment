@@ -86,7 +86,7 @@ test.describe('Benefits dashboard employee management', () => {
         await test.step('Verify validation errors are shown (and employee is not saved)', async () => {
             await expect(dashboard.employeeModal).toBeVisible();
             await expect(dashboard.employeeModalValidationErrors).toBeVisible();
-            await expect(dashboard.loginValidationErrors).toHaveText(/The Last Name field is required/);
+            await expect(dashboard.employeeModalValidationErrors).toHaveText(/The Last Name field is required/);
         });
     });
 });

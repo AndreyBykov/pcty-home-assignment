@@ -40,7 +40,7 @@ test.describe('Authentication', () => {
             await dashboard.gotoLogin();
         });
 
-        await test.step('Submit login form with valid credentials', async () => {
+        await test.step('Submit login form with invalid credentials', async () => {
             await dashboard.fillAndSubmitCredentials('Wrong', 'Username');
         });
 

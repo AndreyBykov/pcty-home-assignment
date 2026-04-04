@@ -1,8 +1,7 @@
-import { Locator, Page } from '@playwright/test';
+import { Locator, Page, expect } from '@playwright/test';
 
 import { ROUTES, SELECTORS } from '@consts';
 import { config } from '@config';
-import { expect } from '@fixtures';
 
 export abstract class BasePage {
     readonly loginForm: Locator;
@@ -14,8 +13,8 @@ export abstract class BasePage {
 
     constructor(public page: Page) {
         this.loginForm = this.page.locator('.login-form-container');
-        this.loginUsernameInput = this.loginForm .getByLabel('Username');
-        this.loginPasswordInput = this.loginForm .getByLabel('Password');
+        this.loginUsernameInput = this.loginForm.getByLabel('Username');
+        this.loginPasswordInput = this.loginForm.getByLabel('Password');
         this.loginButton = this.loginForm .getByRole('button', { name: 'Log In' });
 
         this.loginValidationErrors = this.loginForm.locator(SELECTORS.validationErrors);

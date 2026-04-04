@@ -12,7 +12,6 @@ class Configuration {
     private static instance: Configuration | undefined;
 
     private constructor() {
-        console.log(path.resolve(ROOT_DIR, '.env'));
         dotenv.config({ path: path.resolve(ROOT_DIR, '.env'), quiet: true });
 
         this.validateEnvVariables();
