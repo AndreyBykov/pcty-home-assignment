@@ -36,6 +36,7 @@ export default defineConfig({
             name: 'ui-chrome',
             use: {
                 ...devices['Desktop Chrome'],
+                channel: 'chromium',
                 // storageState: 'playwright/.auth/user.json',
             },
             // dependencies: ['setup'],
