@@ -1,0 +1,36 @@
+{
+    "compilerOptions": {
+        "baseUrl": "./",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "target": "ESNext",
+        "types": ["node"],
+        "outDir": "dist",
+        "lib": ["DOM", "DOM.Iterable", "ESNext"],
+        "noUnusedLocals": true,
+        "strict": true,
+        "alwaysStrict": true,
+        "noImplicitAny": true,
+        "forceConsistentCasingInFileNames": true,
+        "importHelpers": true,
+        "newLine": "lf",
+        "noEmitHelpers": true,
+        "pretty": true,
+        "removeComments": false,
+        "resolveJsonModule": true,
+        "paths": {
+            "@config": ["src/config.ts"],
+            "@consts": ["src/consts.ts"],
+            "@fixtures": ["src/fixtures.ts"],
+            "@utils": ["src/utils.ts"],
+            "@pages/*": ["src/pages/*"],
+            "@services/*": ["src/services/*"],
+            "@models/*": ["src/models/*"]
+        }
+    },
+    "include": [
+        "./playwright.config.ts",
+        "./src/**/*",
+        "./tests/**/*"
+    ]
+}
