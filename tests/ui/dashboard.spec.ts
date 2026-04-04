@@ -133,7 +133,7 @@ test.describe('Editing an existing employee record', () => {
             await testRow.locator(SELECTORS.editEmployeeButton).click();
             await expect(dashboard.employeeModal).toBeVisible();
 
-            await dashboard.fillAndSubmitEmployeeDetails(updatedName, updatedSurname, updatedDependents);
+            await dashboard.fillAndSubmitEmployeeDetails(updatedName, updatedSurname, updatedDependents, dashboard.employeeModalUpdateButton);
         });
 
         await test.step('Verify updated employee data and benefit calculation', async () => {

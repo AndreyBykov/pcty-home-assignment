@@ -68,17 +68,13 @@ export class DashboardPage extends BasePage {
         await expect(this.employeeModal).toBeVisible();
     }
 
-    async fillAndSubmitEmployeeDetails(name: string, surname: string, dependents: number) {
+    async fillAndSubmitEmployeeDetails(name: string, surname: string, dependents: number, actionButton = this.employeeModalAddButton) {
         await this.employeeModalFirstNameInput.fill(name);
         await this.employeeModalLastNameInput.fill(surname);
         await this.employeeModalDependentsInput.fill(dependents.toString());
 
-        const employeeModalActionButton = await this.employeeModalAddButton.isVisible()
-            ? this.employeeModalAddButton
-            : this.employeeModalUpdateButton;
-
         await Promise.all([
-            employeeModalActionButton.click(),
+            actionButton.click(),
             this.page.waitForLoadState('networkidle'),
         ]);
     }
