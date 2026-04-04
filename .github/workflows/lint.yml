@@ -9,7 +9,7 @@ on:
 jobs:
     lint-and-format:
         name: Check linting and formatting
-        runs-on: small
+        runs-on: ubuntu-latest
         timeout-minutes: 10
 
         steps:
