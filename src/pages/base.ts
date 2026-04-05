@@ -15,7 +15,7 @@ export abstract class BasePage {
         this.loginForm = this.page.locator('.login-form-container');
         this.loginUsernameInput = this.loginForm.getByLabel('Username');
         this.loginPasswordInput = this.loginForm.getByLabel('Password');
-        this.loginButton = this.loginForm .getByRole('button', { name: 'Log In' });
+        this.loginButton = this.loginForm.getByRole('button', { name: 'Log In' });
 
         this.loginValidationErrors = this.loginForm.locator(SELECTORS.validationErrors);
     }
@@ -28,10 +28,6 @@ export abstract class BasePage {
     async fillAndSubmitCredentials (login = config.username, password = config.password) {
         await this.loginUsernameInput.fill(login);
         await this.loginPasswordInput.fill(password);
-
-        await Promise.all([
-            this.loginButton.click(),
-            this.page.waitForLoadState('networkidle'),
-        ]);
+        await this.loginButton.click();
     }
 }

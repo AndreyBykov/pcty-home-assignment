@@ -75,7 +75,7 @@ export class DashboardPage extends BasePage {
 
         await Promise.all([
             actionButton.click(),
-            this.page.waitForLoadState('networkidle'),
+            this.page.waitForResponse(API_ROUTES.EMPLOYEES),
         ]);
     }
 }

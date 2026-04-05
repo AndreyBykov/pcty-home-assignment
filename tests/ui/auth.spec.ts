@@ -1,4 +1,5 @@
 import { test, expect } from '@fixtures';
+import { API_ROUTES } from '@consts';
 
 test.describe('Authentication', () => {
     test('should login with valid credentials', { tag: '@smoke' }, async ({ dashboard }) => {
@@ -7,7 +8,10 @@ test.describe('Authentication', () => {
         });
 
         await test.step('Submit login form with valid credentials', async () => {
-            await dashboard.fillAndSubmitCredentials();
+            await Promise.all([
+                dashboard.fillAndSubmitCredentials(),
+                dashboard.page.waitForResponse(API_ROUTES.EMPLOYEES),
+            ]);
         });
 
         await test.step('Verify dashboard and the data are loaded successfully', async () => {

@@ -30,7 +30,6 @@ export default [{
         'playwright/no-useless-not': 'error',
         'playwright/no-skipped-test': 'warn',
         'playwright/expect-expect': 'off',
-        'playwright/no-networkidle': 'off',
         'playwright/no-conditional-expect': 'off',
         'playwright/no-conditional-in-test': 'off',
 
@@ -42,6 +41,7 @@ export default [{
         '@stylistic/quotes': ['error', 'single', {
             'avoidEscape': true,
         }],
+        "@stylistic/no-whitespace-before-property": "error",
         '@stylistic/semi': ['error', 'always'],
         '@stylistic/array-element-newline': ['error', 'consistent'],
         '@stylistic/array-bracket-newline': ['error', 'consistent'],

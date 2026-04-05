@@ -2,6 +2,7 @@ import { test, expect } from '@fixtures';
 import type { Locator } from '@fixtures';
 
 import {
+    API_ROUTES,
     DASHBOARD_ROW_ENTRY_COUNT,
     INCOME_AMOUNT_YEAR_GROSS,
     PAYCHECK_AMOUNT_GROSS,
@@ -79,7 +80,7 @@ test.describe('Benefits dashboard employee management', () => {
             await dashboard.employeeModalFirstNameInput.fill(TEST_EMPLOYEE_INFO.FIRST_NAME);
             await Promise.all([
                 dashboard.employeeModalAddButton.click(),
-                dashboard.page.waitForLoadState('networkidle'),
+                dashboard.page.waitForResponse(API_ROUTES.EMPLOYEES),
             ]);
         });
 
@@ -174,7 +175,7 @@ test.describe('Deleting an existing employee record', () => {
 
             await Promise.all([
                 dashboard.deleteEmployeeModalConfirmButton.click(),
-                dashboard.page.waitForLoadState('networkidle'),
+                dashboard.page.waitForResponse(API_ROUTES.EMPLOYEES),
             ]);
         });
 
