@@ -11,20 +11,14 @@ import {
     TEST_EMPLOYEE_INFO,
     TOTAL_BENEFITS_COST_PAYCHECK,
 } from '@consts';
-import { getEmployeeId, uuidPattern } from '@utils';
-import { EmployeeApiResponse } from '@models/employee.js';
+import { uuidPattern } from '@utils';
 
-test.describe('Benefits dashboard employee management', () => {
+test.describe('Adding an employee record', () => {
     test.beforeEach(async ({ dashboard }) => {
         await dashboard.goto();
     });
 
-    test.afterEach(async ({ service }, { annotations }) => {
-        const employeeId = getEmployeeId(annotations as Record<'type' | 'description', string>[]);
-        if (employeeId) await service.deleteEmployee(employeeId);
-    });
-
-    test('should add a new employee with accurate benefit cost calculations', { tag: '@smoke' }, async ({ dashboard }, { annotations }) => {
+    test('should add a new employee with accurate benefit cost calculations', { tag: '@smoke' }, async ({ dashboard, employeeIds }) => {
         const tableRowCountOriginal = await dashboard.employeesTableRow.count();
 
         await test.step('Initiate new employee record creation', async () => {
@@ -34,7 +28,7 @@ test.describe('Benefits dashboard employee management', () => {
         const uniqueName = `${TEST_EMPLOYEE_INFO.FIRST_NAME}_${Date.now()}`;
 
         await test.step('Enter employee details and save', async () => {
-            dashboard.addEmployeeListener(annotations as Record<'type' | 'description', string>[]);
+            dashboard.addEmployeeListener(employeeIds);
             await dashboard.fillAndResolveEmployeeModal({
                 name: uniqueName,
                 surname: TEST_EMPLOYEE_INFO.LAST_NAME,
@@ -48,7 +42,7 @@ test.describe('Benefits dashboard employee management', () => {
             await expect(dashboard.employeesTableRow).toHaveCount(tableRowCountOriginal + 1);
 
             const tableRows = dashboard.employeesTableRow;
-            const employeeId = getEmployeeId(annotations as Record<'type' | 'description', string>[]);
+            const [employeeId] = employeeIds;
 
             testRow = tableRows.filter({ hasText: employeeId });
             await expect(testRow).toBeVisible();
@@ -70,7 +64,7 @@ test.describe('Benefits dashboard employee management', () => {
         });
     });
 
-    test('should not add employee when modal is cancelled', async ({ dashboard }, { annotations }) => {
+    test('should not add employee when modal is cancelled', async ({ dashboard, employeeIds }) => {
         const tableRowCountOriginal = await dashboard.employeesTableRow.count();
 
         await test.step('Initiate new employee record creation', async () => {
@@ -78,7 +72,7 @@ test.describe('Benefits dashboard employee management', () => {
         });
 
         await test.step('Enter employee details and cancel', async () => {
-            dashboard.addEmployeeListener(annotations as Record<'type' | 'description', string>[]);
+            dashboard.addEmployeeListener(employeeIds);
             await dashboard.fillAndResolveEmployeeModal({
                 name: TEST_EMPLOYEE_INFO.FIRST_NAME,
                 surname: TEST_EMPLOYEE_INFO.LAST_NAME,
@@ -91,7 +85,7 @@ test.describe('Benefits dashboard employee management', () => {
             await expect(dashboard.employeeModal).toBeHidden();
             await expect(dashboard.employeesTableRow).toHaveCount(tableRowCountOriginal);
 
-            const employeeId = getEmployeeId(annotations as Record<'type' | 'description', string>[]);
+            const [employeeId] = employeeIds;
             expect(employeeId).toBeUndefined();
         });
     });
@@ -125,19 +119,13 @@ test.describe('Benefits dashboard employee management', () => {
 });
 
 test.describe('Editing an existing employee record', () => {
-    let employeeInfo: EmployeeApiResponse;
-
-    test.beforeEach(async ({ dashboard, service }) => {
-        employeeInfo = await service.addEmployee();
+    test.beforeEach(async ({ dashboard, seededEmployee }) => {
+        void seededEmployee;
         await dashboard.goto();
     });
 
-    test.afterEach(async ({ service }) => {
-        await service.deleteEmployee(employeeInfo.id);
-    });
-
-    test('should edit an existing employee and reflect the changes in the dashboard', async ({ dashboard }) => {
-        const testRow = dashboard.employeesTableRow.filter({ hasText: employeeInfo.id });
+    test('should edit an existing employee and reflect the changes in the dashboard', async ({ dashboard, seededEmployee }) => {
+        const testRow = dashboard.employeesTableRow.filter({ hasText: seededEmployee.id });
 
         await test.step('Verify employee is visible in the table', async () => {
             await expect(testRow).toBeVisible();
@@ -148,8 +136,8 @@ test.describe('Editing an existing employee record', () => {
             await expect(rowEntry).toHaveCount(DASHBOARD_ROW_ENTRY_COUNT);
 
             const entries = await rowEntry.all();
-            await expect(entries[0]).toHaveText(employeeInfo.id);
-            await expect(entries[1]).toHaveText(employeeInfo.firstName);
+            await expect(entries[0]).toHaveText(seededEmployee.id);
+            await expect(entries[1]).toHaveText(seededEmployee.firstName);
             await expect(entries[2]).toHaveText(TEST_EMPLOYEE_INFO.LAST_NAME);
             await expect(entries[3]).toHaveText(TEST_EMPLOYEE_INFO.DEPENDENTS.toString());
             await expect(entries[4]).toHaveText(INCOME_AMOUNT_YEAR_GROSS.toFixed(2));
@@ -177,7 +165,7 @@ test.describe('Editing an existing employee record', () => {
         await test.step('Verify updated employee data and benefit calculation', async () => {
             const rowEntry = testRow.locator('td');
             const entries = await rowEntry.all();
-            await expect(entries[0]).toHaveText(employeeInfo.id);
+            await expect(entries[0]).toHaveText(seededEmployee.id);
             await expect(entries[1]).toHaveText(updatedName);
             await expect(entries[2]).toHaveText(updatedSurname);
             await expect(entries[3]).toHaveText(updatedDependents.toString());
@@ -192,19 +180,13 @@ test.describe('Editing an existing employee record', () => {
 });
 
 test.describe('Deleting an existing employee record', () => {
-    let employeeInfo: EmployeeApiResponse;
-
-    test.beforeEach(async ({ dashboard, service }) => {
-        employeeInfo = await service.addEmployee();
+    test.beforeEach(async ({ dashboard, seededEmployee }) => {
+        void seededEmployee;
         await dashboard.goto();
     });
 
-    // Skipping test.afterEach() with the record clean-up here,
-    // but it could be a good idea to have it here in real project
-    // in case automated deletion fails / something goes wrong with the test
-
-    test('should delete an existing employee and reflect the changes in the dashboard', async ({ dashboard }) => {
-        const testRow = dashboard.employeesTableRow.filter({ hasText: employeeInfo.id });
+    test('should delete an existing employee and reflect the changes in the dashboard', async ({ dashboard, seededEmployee }) => {
+        const testRow = dashboard.employeesTableRow.filter({ hasText: seededEmployee.id });
 
         await test.step('Verify employee is visible in the table', async () => {
             await expect(testRow).toBeVisible();

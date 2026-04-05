@@ -64,11 +64,11 @@ export class DashboardPage extends BasePage {
         await expect(this.employeesTableRow.first()).toBeVisible();
     }
 
-    addEmployeeListener(annotations: Record<'type' | 'description', string>[]) {
+    addEmployeeListener(employeeIds: string[]) {
         this.page.on('response', async (r) => {
             if (r.status() === 200 && r.request().method() === 'POST' && r.request().url().includes(API_ROUTES.EMPLOYEES)) {
                 const { id } = await r.json() as Record<string, string>;
-                if (id) annotations.push({ type: 'employeeId', description: id });
+                if (id) employeeIds.push(id);
             }
         });
     }

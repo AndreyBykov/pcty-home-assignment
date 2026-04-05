@@ -58,7 +58,7 @@ test.describe('Authentication', () => {
 
     // Navigating directly to the dashboard while not being logged in does not redirect to login page.
     // Instead, the dashboard with no data is loaded. Marking it as test.fail() until it's fixed
-    test.fail('should load dashboard via direct link without authentication', async ({ dashboard }) => {
+    test.fail('should not load dashboard via direct link without authentication', async ({ dashboard }) => {
         await test.step('Navigate to dashboard without login', async () => {
             await dashboard.page.goto(ROUTES.DASHBOARD);
         });

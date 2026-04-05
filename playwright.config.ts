@@ -2,10 +2,10 @@ import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
     testDir: './tests',
-    fullyParallel: false,
     forbidOnly: !!process.env.CI,
     retries: process.env.CI ? 2 : 0,
     workers: 1, // Back-end seems to be not able to run the tests in parallel with the same login
+    fullyParallel: false,
     reporter: [
         ['html', { open: 'never' }],
         ['list', { printSteps: true }],
@@ -39,12 +39,14 @@ export default defineConfig({
                 channel: 'chromium',
                 // storageState: 'playwright/.auth/user.json',
             },
+            testMatch: /ui\/.*\.spec\.ts/,
             // dependencies: ['setup'],
             // grepInvert: /@smoke/,
         },
         {
             name: 'api',
-            testMatch: /api\.spec\.ts/,
+            testMatch: /api\/.*\.spec\.ts/,
+            fullyParallel: true,
         },
     ],
 });

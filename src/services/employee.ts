@@ -15,7 +15,6 @@ export class EmployeeService {
             firstName: `${TEST_EMPLOYEE_INFO.FIRST_NAME}_${Date.now()}`,
             lastName: TEST_EMPLOYEE_INFO.LAST_NAME,
             dependants: TEST_EMPLOYEE_INFO.DEPENDENTS,
-            username: config.username,
             ...employeeApiInput,
         };
 
@@ -33,15 +32,17 @@ export class EmployeeService {
         }
     }
 
-    async deleteEmployee(employeeId: string) {
-        const response = await this.request.delete(`${API_ROUTES.EMPLOYEES}/${employeeId}`, {
-            headers: { authorization: `Basic ${config.authToken}` },
-        });
+    async deleteEmployee(employeeId?: string) {
+        if (employeeId) {
+            const response = await this.request.delete(`${API_ROUTES.EMPLOYEES}/${employeeId}`, {
+                headers: { authorization: `Basic ${config.authToken}` },
+            });
 
-        if (response.ok()) {
-            console.log('     -> Removed record', inspect({ id: employeeId }, { colors: true }));
-        } else {
-            console.error(`Failed to delete the record ${employeeId}. Status: ${response.status()}`);
+            if (response.ok()) {
+                console.log('     -> Removed record', inspect({ id: employeeId }, { colors: true }));
+            } else {
+                console.error(`Failed to delete the record ${employeeId}. Status: ${response.status()}`);
+            }
         }
     }
 }
