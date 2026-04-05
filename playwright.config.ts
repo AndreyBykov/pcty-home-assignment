@@ -46,7 +46,6 @@ export default defineConfig({
         {
             name: 'api',
             testMatch: /api\/.*\.spec\.ts/,
-            fullyParallel: true,
         },
     ],
 });

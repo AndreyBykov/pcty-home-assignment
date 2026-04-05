@@ -24,7 +24,7 @@ test.describe('Authentication', () => {
             await dashboard.gotoLogin();
         });
 
-        await test.step('Submit login form with valid credentials', async () => {
+        await test.step('Submit login form without credentials', async () => {
             await dashboard.fillAndSubmitCredentials('', '');
         });
 
@@ -63,7 +63,7 @@ test.describe('Authentication', () => {
             await dashboard.page.goto(ROUTES.DASHBOARD);
         });
 
-        await test.step('Verify redirect ot login page', async () => {
+        await test.step('Verify redirect to login page', async () => {
             await expect(dashboard.loginForm).toBeAttached();
             await expect(dashboard.page).toHaveURL(ROUTES.LOGIN);
             await expect(dashboard.page).toHaveTitle('Log In - Paylocity Benefits Dashboard');

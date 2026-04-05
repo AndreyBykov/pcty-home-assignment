@@ -120,7 +120,7 @@ test.describe('Adding an employee record', () => {
 
 test.describe('Editing an existing employee record', () => {
     test.beforeEach(async ({ dashboard, seededEmployee }) => {
-        void seededEmployee;
+        void seededEmployee; // We need this to trigger the fixture setup without using the value directly in beforeEach
         await dashboard.goto();
     });
 
@@ -181,7 +181,7 @@ test.describe('Editing an existing employee record', () => {
 
 test.describe('Deleting an existing employee record', () => {
     test.beforeEach(async ({ dashboard, seededEmployee }) => {
-        void seededEmployee;
+        void seededEmployee; // We need this to trigger the fixture setup without using the value directly in beforeEach
         await dashboard.goto();
     });
 
