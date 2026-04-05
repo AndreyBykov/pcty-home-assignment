@@ -19,6 +19,14 @@ export const SELECTORS = {
     deleteEmployeeModal: '#deleteModal',
 };
 
+export const MODAL_ACTIONS = {
+    ADD: 'add',
+    UPDATE: 'update',
+    CANCEL: 'cancel',
+} as const;
+
+export type ModalAction = typeof MODAL_ACTIONS[keyof typeof MODAL_ACTIONS];
+
 export const PAYCHECK_AMOUNT_GROSS = 2_000;
 export const PAYCHECK_QTY_YEAR = 26;
 export const INCOME_AMOUNT_YEAR_GROSS = PAYCHECK_AMOUNT_GROSS * PAYCHECK_QTY_YEAR;

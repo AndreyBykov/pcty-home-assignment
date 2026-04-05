@@ -5,6 +5,7 @@ import {
     API_ROUTES,
     DASHBOARD_ROW_ENTRY_COUNT,
     INCOME_AMOUNT_YEAR_GROSS,
+    MODAL_ACTIONS,
     PAYCHECK_AMOUNT_GROSS,
     PAYCHECK_AMOUNT_NET, SELECTORS,
     TEST_EMPLOYEE_INFO,
@@ -24,16 +25,21 @@ test.describe('Benefits dashboard employee management', () => {
     });
 
     test('should add a new employee with accurate benefit cost calculations', { tag: '@smoke' }, async ({ dashboard }, { annotations }) => {
+        const tableRowCountOriginal = await dashboard.employeesTableRow.count();
+
         await test.step('Initiate new employee record creation', async () => {
             await dashboard.openEmployeeModal();
         });
 
-        const tableRowCountOriginal = await dashboard.employeesTableRow.count();
         const uniqueName = `${TEST_EMPLOYEE_INFO.FIRST_NAME}_${Date.now()}`;
 
         await test.step('Enter employee details and save', async () => {
             dashboard.addEmployeeListener(annotations as Record<'type' | 'description', string>[]);
-            await dashboard.fillAndSubmitEmployeeDetails(uniqueName, 'Doe', 1);
+            await dashboard.fillAndResolveEmployeeModal({
+                name: uniqueName,
+                surname: TEST_EMPLOYEE_INFO.LAST_NAME,
+                dependents: TEST_EMPLOYEE_INFO.DEPENDENTS,
+            });
         });
 
         let testRow: Locator;
@@ -61,6 +67,32 @@ test.describe('Benefits dashboard employee management', () => {
             await expect(entries[5]).toHaveText(PAYCHECK_AMOUNT_GROSS.toFixed(2));
             await expect(entries[6]).toHaveText(TOTAL_BENEFITS_COST_PAYCHECK(TEST_EMPLOYEE_INFO.DEPENDENTS).toFixed(2));
             await expect(entries[7]).toHaveText(PAYCHECK_AMOUNT_NET(TEST_EMPLOYEE_INFO.DEPENDENTS).toFixed(2));
+        });
+    });
+
+    test('should not add employee when modal is cancelled', async ({ dashboard }, { annotations }) => {
+        const tableRowCountOriginal = await dashboard.employeesTableRow.count();
+
+        await test.step('Initiate new employee record creation', async () => {
+            await dashboard.openEmployeeModal();
+        });
+
+        await test.step('Enter employee details and cancel', async () => {
+            dashboard.addEmployeeListener(annotations as Record<'type' | 'description', string>[]);
+            await dashboard.fillAndResolveEmployeeModal({
+                name: TEST_EMPLOYEE_INFO.FIRST_NAME,
+                surname: TEST_EMPLOYEE_INFO.LAST_NAME,
+                dependents: TEST_EMPLOYEE_INFO.DEPENDENTS,
+                action: MODAL_ACTIONS.CANCEL,
+            });
+        });
+
+        await test.step('Verify no changes were saved', async () => {
+            await expect(dashboard.employeeModal).toBeHidden();
+            await expect(dashboard.employeesTableRow).toHaveCount(tableRowCountOriginal);
+
+            const employeeId = getEmployeeId(annotations as Record<'type' | 'description', string>[]);
+            expect(employeeId).toBeUndefined();
         });
     });
 
@@ -134,7 +166,12 @@ test.describe('Editing an existing employee record', () => {
             await testRow.locator(SELECTORS.editEmployeeButton).click();
             await expect(dashboard.employeeModal).toBeVisible();
 
-            await dashboard.fillAndSubmitEmployeeDetails(updatedName, updatedSurname, updatedDependents, dashboard.employeeModalUpdateButton);
+            await dashboard.fillAndResolveEmployeeModal({
+                name: updatedName,
+                surname: updatedSurname,
+                dependents: updatedDependents,
+                action: MODAL_ACTIONS.UPDATE,
+            });
         });
 
         await test.step('Verify updated employee data and benefit calculation', async () => {
@@ -161,6 +198,10 @@ test.describe('Deleting an existing employee record', () => {
         employeeInfo = await service.addEmployee();
         await dashboard.goto();
     });
+
+    // Skipping test.afterEach() with the record clean-up here,
+    // but it could be a good idea to have it here in real project
+    // in case automated deletion fails / something goes wrong with the test
 
     test('should delete an existing employee and reflect the changes in the dashboard', async ({ dashboard }) => {
         const testRow = dashboard.employeesTableRow.filter({ hasText: employeeInfo.id });
