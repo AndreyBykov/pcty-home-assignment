@@ -1,23 +1,25 @@
-/* ----- DISABLED: AUTH SETUP -----
-import { test as setup, expect } from '@playwright/test';
+// ----- DISABLED IN PLAYWRIGHT CONFIG -----
+import { test as setup } from '@fixtures';
 
-import { config } from '@config';
-import { API_ROUTES, ROUTES } from '@consts';
+import { API_ROUTES } from '@consts';
 
-setup('authenticate', async ({ page }) => {
-    await page.goto(ROUTES.LOGIN);
+setup('authenticate', async ({ dashboard }) => {
+    await setup.step('Navigate to login page', async () => {
+        await dashboard.gotoLogin();
+    });
 
-    await page.getByLabel('Username').fill(config.username);
-    await page.getByLabel('Password').fill(config.password);
+    await setup.step('Submit login form with valid credentials', async () => {
+        await Promise.all([
+            dashboard.fillAndSubmitCredentials(),
+            dashboard.page.waitForResponse(API_ROUTES.EMPLOYEES),
+        ]);
+    });
 
-    await Promise.all([
-        page.getByRole('button', { name: 'Log In' }).click(),
-        page.waitForResponse(API_ROUTES.EMPLOYEES),
-    ]);
+    await setup.step('Verify dashboard and the data are loaded successfully', async () => {
+        await dashboard.verifyDashboardIsLoaded();
+    });
 
-    await expect(page).toHaveURL(ROUTES.DASHBOARD);
-    await expect(page).toHaveTitle('Employees - Paylocity Benefits Dashboard');
-
-    await page.context().storageState({ path: 'playwright/.auth/user.json' });
+    await setup.step('Save session', async () => {
+        await dashboard.page.context().storageState({ path: 'playwright/.auth/user.json' });
+    });
 });
-*/
