@@ -86,7 +86,7 @@ npx playwright show-report
 - **Auth token expiration:** The current setup assumes a static token provided via `.env`. In a production project, a token refresh mechanism would be needed to handle expiration — e.g., a fixture or setup step that re-authenticates and updates the token before each run.
 - **Single browser (Chromium):** Tests currently run against Chromium only. This is sufficient for the scope of a home assignment; in a real project the browser matrix would be expanded based on business requirements and target audience (e.g., adding Firefox, WebKit, mobile viewports).
 - **`test.fail()` for known bugs:** Tests that verify correct behavior but hit known application bugs are wrapped in `test.fail()` with inline comments describing the defect. This keeps the suite green while documenting issues.
-- **Fixture-based cleanup:** `seededEmployee` and `employeeIds` fixtures handle test data teardown automatically, so tests don't leave stale records.
+- **Fixture-based clean-up:** `seededEmployee` and `employeeIds` fixtures handle test data teardown automatically, so tests don't leave stale records.
 
 ## Linting
 
