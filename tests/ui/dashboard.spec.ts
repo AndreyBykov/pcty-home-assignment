@@ -215,6 +215,6 @@ test.describe('Deleting an existing employee record', () => {
     });
 
     // We have a test above confirming that an employee record is not saved when the modal is cancelled.
-    // Would not consider it critical, but we could also add a test confirming, that
-    // clicking on 'Delete' and closing the modal does not a actually remove a record.
+    // Would not consider it as something critical, but we could also add a test confirming, that
+    // clicking on 'Delete' and closing the modal does not actually remove a record.
 });

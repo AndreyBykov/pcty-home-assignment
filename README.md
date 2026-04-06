@@ -88,6 +88,15 @@ npx playwright show-report
 - **`test.fail()` for known bugs:** Tests that verify correct behavior but hit known application bugs are wrapped in `test.fail()` with inline comments describing the defect. This keeps the suite green while documenting issues.
 - **Fixture-based clean-up:** `seededEmployee` and `employeeIds` fixtures handle test data teardown automatically, so tests don't leave stale records.
 
+## CI
+
+GitHub Actions workflows run on every push and PR to `main`/`master`:
+
+- **Playwright Tests** — runs the full test suite (API + UI) on Ubuntu with headless Chromium, uploads the HTML report as an artifact.
+- **Lint & Format** — runs ESLint to check code quality and formatting.
+
+Credentials are stored as GitHub Actions secrets (`USERNAME`, `PASSWORD`, `AUTH_TOKEN`).
+
 ## Linting
 
 ```bash
