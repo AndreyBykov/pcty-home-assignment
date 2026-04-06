@@ -211,11 +211,11 @@ test.describe('api/employees operations and calculations', () => {
                 const response = await request.get(`${API_ROUTES.EMPLOYEES}/${seededEmployee.id}`, {
                     headers: { authorization: `Basic ${config.authToken}` },
                 });
-                expect(await response.text()).toBeFalsy();
                 // The record is actually removed from the db,
                 // However, the response comes with status 200, which is not ideal.
-                // Uncomment once it's fixed.
+                // Use status assertion once it's fixed.
                 // expect(response.status()).toBe(404);
+                expect(await response.text()).toBeFalsy();
             });
         });
     });
@@ -294,7 +294,39 @@ test.describe('api/employees operations and calculations', () => {
                 headers: { authorization: `Basic ${config.authToken}` },
             });
 
-            expect(await response.text()).toBeFalsy();
+            expect(response.status()).toBe(404);
+        });
+
+        // Response comes with status 200, which is not ideal.
+        // Marking it as test.fail() until it's fixed
+        test.fail('Should handle DELETE for non-existent employee gracefully', async ({ request }) => {
+            const response = await request.delete(`${API_ROUTES.EMPLOYEES}/${uuidv4()}`, {
+                headers: { authorization: `Basic ${config.authToken}` },
+            });
+
+            expect(response.status()).toBe(404);
+        });
+
+        // This would currently add an employee with 0 salary, gross pay, and negative net pay.
+        // Also, the created record has a new id assigned. Marking it as test.fail() until it's fixed
+        test.fail('Should handle PUT for non-existent employee gracefully', async ({ request, employeeIds }) => {
+            const response = await request.put(API_ROUTES.EMPLOYEES, {
+                headers: { authorization: `Basic ${config.authToken}` },
+                data: {
+                    id: uuidv4(),
+                    firstName: 'Non-existing',
+                    lastName: 'Employee',
+                    dependants: 3,
+                },
+            });
+
+            // Adding this just for the sake of cleanup, since currently the
+            // input is not sanitized, and the record is saved as-is.
+            if (response.ok()) {
+                const { id } = await response.json() as EmployeeApiResponse;
+                employeeIds.push(id);
+            }
+
             expect(response.status()).toBe(404);
         });
     });

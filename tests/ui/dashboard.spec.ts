@@ -91,12 +91,14 @@ test.describe('Adding an employee record', () => {
     });
 
     // Trying to add an employee with incomplete data silently fails on Back-End with error 405,
-    // and no validation errors are show. Marking it as test.fail() until it's fixed
-    // Same applies to no data (saving with empty strings).
-    // There could also be more edge-cases like exceeding max number of dependents, etc.,
-    // but this is more suitable for component testing,
-    // while it could be a good idea to have at least one test for this in e2e to confirm that
-    // validation actually works, shown, and user is not saved.
+    // and no validation errors are shown. Marking it as test.fail() until it's fixed
+    //
+    // Same applies to e.g. no data (saving with empty strings), exceeding max number of allowed dependents,
+    // having negative number of dependants, having text values instead of a number, etc.
+    // Currently, no validation is done on front-end, no errors are shown,
+    // but this is more suitable for component testing, plus we also check some of these cases in API tests.
+    // On the other hand, it could be a good idea to have at least one e2e test for
+    // this to confirm that validation actually works, shown, and user is not saved.
     test.fail('should not add an employee with partial data and show validation errors', async ({ dashboard }) => {
         await test.step('Initiate new employee record creation', async () => {
             await dashboard.openEmployeeModal();
@@ -176,7 +178,12 @@ test.describe('Editing an existing employee record', () => {
         });
     });
 
-    // Similar to validation during adding an employee, we could add the same tests for editing an employee here.
+    // Similar to test for adding an employee, we could add the same tests for editing an employee here:
+    // - check validation errors are shown,
+    // - check edge-cases
+    // - etc.
+    // While again this is more suitable for component testing, I would maybe
+    // add at least one to make sure that the record is not saved in real project.
 });
 
 test.describe('Deleting an existing employee record', () => {
@@ -206,4 +213,8 @@ test.describe('Deleting an existing employee record', () => {
             await expect(testRow).not.toBeAttached();
         });
     });
+
+    // We have a test above confirming that an employee record is not saved when the modal is cancelled.
+    // Would not consider it critical, but we could also add a test confirming, that
+    // clicking on 'Delete' and closing the modal does not a actually remove a record.
 });
