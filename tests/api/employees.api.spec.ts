@@ -48,7 +48,7 @@ test.describe('api/employees operations and calculations', () => {
                 });
             });
 
-            // Adding this just for the sake of cleanup, since currently the
+            // Adding this just for the sake of clean-up, since currently the
             // input is not sanitized, and the record is saved as-is.
             if (response!.ok()) {
                 const { id } = await response!.json() as EmployeeApiResponse;
@@ -320,7 +320,7 @@ test.describe('api/employees operations and calculations', () => {
                 },
             });
 
-            // Adding this just for the sake of cleanup, since currently the
+            // Adding this just for the sake of clean-up, since currently the
             // input is not sanitized, and the record is saved as-is.
             if (response.ok()) {
                 const { id } = await response.json() as EmployeeApiResponse;
