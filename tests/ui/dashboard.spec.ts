@@ -94,7 +94,7 @@ test.describe('Adding an employee record', () => {
     // and no validation errors are shown. Marking it as test.fail() until it's fixed
     //
     // Same applies to e.g. no data (saving with empty strings), exceeding max number of allowed dependents,
-    // having negative number of dependants, having text values instead of a number, etc.
+    // having negative number of dependents, having text values instead of a number, etc.
     // Currently, no validation is done on front-end, no errors are shown,
     // but this is more suitable for component testing, plus we also check some of these cases in API tests.
     // On the other hand, it could be a good idea to have at least one e2e test for
