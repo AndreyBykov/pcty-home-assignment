@@ -243,6 +243,19 @@ test.describe('api/employees operations and calculations', () => {
         }
     });
 
+    test.describe('Response Time', () => {
+        test('GET /employees should respond within 2 seconds', async ({ request }) => {
+            const start = Date.now();
+            const response = await request.get(API_ROUTES.EMPLOYEES, {
+                headers: { authorization: `Basic ${config.authToken}` },
+            });
+            const elapsedTime = Date.now() - start;
+
+            expect(response.status()).toBe(200);
+            expect(elapsedTime).toBeLessThan(2_000);
+        });
+    });
+
     test.describe('Negative Scenarios & Validation', () => {
         const scenarios = [
             {
