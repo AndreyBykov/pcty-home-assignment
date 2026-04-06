@@ -58,6 +58,9 @@ npx playwright show-report
 ## Project Structure
 
 ```
+├── bug-reports/
+│   ├── API_BUG_REPORT.md           # API bugs found during testing
+│   └── UI_BUG_REPORT.md            # UI bugs found during testing
 ├── src/
 │   ├── config.ts                   # Environment / credentials configuration
 │   ├── consts.ts                   # Routes, selectors, business-related constants
