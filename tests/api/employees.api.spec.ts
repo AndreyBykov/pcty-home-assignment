@@ -29,9 +29,8 @@ test.describe('api/employees operations and calculations', () => {
             expect(response.status()).toBe(200);
         });
 
-        // The input is currently not sanitized, and the record is saved as-is.
+        // BUG-API-003: The input is currently not sanitized, and the record is saved as-is.
         // Request should be either rejected, or the input should be sanitized.
-        // Marking it as test.fail() until it's fixed
         test.fail('API must sanitize or reject executable script payloads (Stored XSS)', async ({ request, employeeIds }) => {
             let response: APIResponse;
 
@@ -82,7 +81,7 @@ test.describe('api/employees operations and calculations', () => {
                     headers: { authorization: `Basic ${config.authToken}` },
                     data: inputData,
                 });
-                await expect(postResponse).toBeOK(); // Returns 200, should rather return 201
+                await expect(postResponse).toBeOK(); // BUG-API-001: Returns 200, should rather return 201
 
                 createdRecord = await postResponse.json() as EmployeeApiResponse;
                 validateSchema(createdRecord);
@@ -211,7 +210,7 @@ test.describe('api/employees operations and calculations', () => {
                 const response = await request.get(`${API_ROUTES.EMPLOYEES}/${seededEmployee.id}`, {
                     headers: { authorization: `Basic ${config.authToken}` },
                 });
-                // The record is actually removed from the db,
+                // BUG-API-001: The record is actually removed from the db,
                 // However, the response comes with status 200, which is not ideal.
                 // Use status assertion once it's fixed.
                 // expect(response.status()).toBe(404);
@@ -287,8 +286,7 @@ test.describe('api/employees operations and calculations', () => {
             });
         }
 
-        // Response comes with status 200, which is not ideal.
-        // Marking it as test.fail() until it's fixed
+        // BUG-API-001: Response comes with status 200 instead of 404.
         test.fail('Should handle GET for non-existent employee gracefully', async ({ request }) => {
             const response = await request.get(`${API_ROUTES.EMPLOYEES}/${uuidv4()}`, {
                 headers: { authorization: `Basic ${config.authToken}` },
@@ -297,8 +295,7 @@ test.describe('api/employees operations and calculations', () => {
             expect(response.status()).toBe(404);
         });
 
-        // Response comes with status 200, which is not ideal.
-        // Marking it as test.fail() until it's fixed
+        // BUG-API-001: Response comes with status 200 instead of 404.
         test.fail('Should handle DELETE for non-existent employee gracefully', async ({ request }) => {
             const response = await request.delete(`${API_ROUTES.EMPLOYEES}/${uuidv4()}`, {
                 headers: { authorization: `Basic ${config.authToken}` },
@@ -307,8 +304,8 @@ test.describe('api/employees operations and calculations', () => {
             expect(response.status()).toBe(404);
         });
 
-        // This would currently add an employee with 0 salary, gross pay, and negative net pay.
-        // Also, the created record has a new id assigned. Marking it as test.fail() until it's fixed
+        // BUG-API-002: This would currently add an employee with 0 salary, gross pay,
+        // and negative net pay. Also, the created record has a new id assigned.
         test.fail('Should handle PUT for non-existent employee gracefully', async ({ request, employeeIds }) => {
             const response = await request.put(API_ROUTES.EMPLOYEES, {
                 headers: { authorization: `Basic ${config.authToken}` },

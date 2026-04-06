@@ -17,7 +17,7 @@
 
 **Expected result:** Refreshing the page should maintain the session and reload the data normally.
 
-**Environment:** macOS 26.3.1 (arm) + Desktop Chromium 146.0.7680.178 / Node.js 24.14.1 + Playwright 1.59.1 + Chrome for Testing 147.0.7727.15 (arm64)
+**Environment:** macOS 26.3.1 (arm) + Desktop Chromium 146.0.7680.178
 
 ---
 
@@ -35,7 +35,7 @@
 
 **Expected result:** A loading indicator (spinner, skeleton rows, or similar) should be shown while data is being fetched, or the data should be pre-rendered server-side.
 
-**Environment:** macOS 26.3.1 (arm) + Desktop Chromium 146.0.7680.178 / Node.js 24.14.1 + Playwright 1.59.1 + Chrome for Testing 147.0.7727.15 (arm64)
+**Environment:** macOS 26.3.1 (arm) + Desktop Chromium 146.0.7680.178
 
 ---
 
@@ -55,7 +55,7 @@
 
 **Expected result:** Row ordering should be deterministic. Adding to the top (newest first) would be the most intuitive default, given there are no sorting controls.
 
-**Environment:** macOS 26.3.1 (arm) + Desktop Chromium 146.0.7680.178 / Node.js 24.14.1 + Playwright 1.59.1 + Chrome for Testing 147.0.7727.15 (arm64)
+**Environment:** macOS 26.3.1 (arm) + Desktop Chromium 146.0.7680.178
 
 ---
 

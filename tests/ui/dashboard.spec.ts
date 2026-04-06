@@ -90,8 +90,8 @@ test.describe('Adding an employee record', () => {
         });
     });
 
-    // Trying to add an employee with incomplete data silently fails on Back-End with error 405,
-    // and no validation errors are shown. Marking it as test.fail() until it's fixed
+    // BUG-UI-005: Trying to add an employee with incomplete data silently
+    // fails on Back-End with error 405, and no validation errors are shown.
     //
     // Same applies to e.g. no data (saving with empty strings), exceeding max number of allowed dependents,
     // having negative number of dependents, having text values instead of a number, etc.

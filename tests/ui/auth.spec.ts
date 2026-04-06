@@ -37,8 +37,7 @@ test.describe('Authentication', () => {
         });
     });
 
-    // Using wrong credentials results in Error 405 and failed page.
-    // Marking it as test.fail() until it's fixed
+    // BUG-API-005: Using wrong credentials results in Error 405 and failed page.
     test.fail('should not login with invalid credentials', async ({ dashboard }) => {
         await test.step('Navigate to login page', async () => {
             await dashboard.gotoLogin();
@@ -56,8 +55,8 @@ test.describe('Authentication', () => {
         });
     });
 
-    // Navigating directly to the dashboard while not being logged in does not redirect to login page.
-    // Instead, the dashboard with no data is loaded. Marking it as test.fail() until it's fixed
+    // BUG-UI-008: Navigating directly to the dashboard while not being logged in
+    // does not redirect to login page. Instead, the dashboard with no data is loaded.
     test.fail('should not load dashboard via direct link without authentication', async ({ dashboard }) => {
         await test.step('Navigate to dashboard without login', async () => {
             await dashboard.page.goto(ROUTES.DASHBOARD);
